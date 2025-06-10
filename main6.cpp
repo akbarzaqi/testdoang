@@ -1,3 +1,6 @@
+94% penyimpanan digunakan … 
+Jika ruang penyimpanan sudah penuh, Anda tidak dapat menyimpan ke Drive atau menggunakan Gmail. Dapatkan penyimpanan sebesar 30 GB seharga Rp 14.500,00 Rp 3.500,00/bulan untuk 3 bulan.
+
 // deklarasikan semua header disini
 #include <windows.h>
 #include <GL/glut.h>
@@ -6,7 +9,7 @@
 float angle = 0.0f;					// sudut transformasi kamera
 float posX = 0.0f, rotX =  0.0f;	// posisi kamera di sumbu X
 float posY = 0.0f, rotY =  0.0f;	// posisi kamera di sumbu Y
-float posZ = 10.0f, rotZ = -1.0f;	// posisi kamera di sumbu Z
+float posZ = 5.0f, rotZ = -1.0f;	// posisi kamera di sumbu Z
 
 float objectAngleX = 0.0f;			// sudut tranformasi obyek di sumbu X
 float objectAngleY = 0.0f;			// sudut tranformasi obyek di sumbu Y
@@ -105,78 +108,48 @@ void drawSphere(float radius, int slices, int stacks)
 	glPopMatrix();
 }
 
-void drawPyramid()
+// fungsi untuk menggambar obyek
+void drawObject()
 {
-	
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glPushMatrix();
-	glTranslatef(2.0f, -1.0f, 0.0f); 
-	glBegin(GL_TRIANGLES);
-		//Depan
-		glColor3f(1.0f, 1.0f, 0.0f);
-		glVertex3f( 0.0f, 1.0f,  0.0f);
-		glVertex3f(-1.0f,-1.0f,  1.0f);
-		glVertex3f( 1.0f,-1.0f,  1.0f);
-		//Kanan
-		glColor3f(0.0f, 0.5f, 1.0f);
-		
-		glVertex3f( 0.0f, 1.0f,  0.0f);
-		glVertex3f( 1.0f,-1.0f,  1.0f);
-		glVertex3f( 1.0f,-1.0f, -1.0f);
-		//Belakang
-		glColor3f(1.0f, 0.0f, 0.0f);
-		
-		glVertex3f( 0.0f, 1.0f,  0.0f);
-		glVertex3f( 1.0f,-1.0f, -1.0f);
-		glVertex3f(-1.0f,-1.0f, -1.0f);
-		//Kiri
-		glColor3f(1.0f, 0.75f, 0.8f);
-		glVertex3f( 0.0f, 1.0f,  0.0f);
-		glVertex3f(-1.0f,-1.0f, -1.0f);
-		glVertex3f(-1.0f,-1.0f,  1.0f);
-	glEnd();
-	//alas
-	glBegin(GL_QUADS);
-    	glColor3f(1.0f, 1.0f, 1.0f);
-    	glVertex3f(-1.0f,-1.0f,  1.0f); 
-    	glVertex3f( 1.0f,-1.0f,  1.0f); 
-    	glVertex3f( 1.0f,-1.0f, -1.0f); 
-    	glVertex3f(-1.0f,-1.0f, -1.0f); 
-	glEnd();
-	glPopMatrix();
-}
-
-void drawTeapot()
-{
-	
-	glColor3f(0.25f, 0.25f, 0.25f);
-	glPushMatrix();
-	glTranslatef(-2.0f, 0.0f, 0.0f); 
-	glutSolidTeapot(1.0f);
-	glPopMatrix();
-}
-
-//fungsi untuk menggambar obyek
-void drawObject() {
+	// obyek bisa dimasukkan diantara glPushMatrix() dan glPopMatrix() 
+	// fungsinya agar obyek tidak terpengaruh atau mempengaruhi obyek lain
+	// saat diwarnai, ditransformasi dan sebagainya
 	glPushMatrix();
 
-	//Rotasi ke kanan-kiri
+	// operasi transformasi rotasi obyek ke arah kanan-kiri
 	glRotatef(objectAngleY, 0.0f, 1.0f, 0.0f);
 
 	glPushMatrix();
 
-	//Rotasi ke atas-bawah
+	// operasi transformasi rotasi obyek ke arah atas-bawah
 	glRotatef(objectAngleX, 1.0f, 0.0f, 0.0f);
-	
-	drawTeapot();
-	
-	drawPyramid();
-	
+
+	// set warna obyek ke warna hijau (0.0f, 1.0f, 0.0f)
+	glColor3f(0.0f, 1.0f, 0.0f);
+
+	// bila menggambar obyek harus diawali glBegin(tipe obyek) dan diakhiri dengan glEnd()
+	// kecuali menggunakan fungsi yang sudah ada di GLUT-OpenGL seperti dibawah ini
+	//glutSolidCube(1.0f); // menggambar obyek kubus
+	//glutWireTeapot(1.0f);
+	drawCube(); //panggil fungsi untuk membuat obyek kubus
+	//drawCylinder(1.0f, 2.0f, 20, 20); // fungsi untuk membuat obyek silinder
+	//drawSphere(1.0f, 50, 50); // fungsi untuk membuat obyek bola
 
 	glPopMatrix();
+
 	glPopMatrix();
+	
+	// membuat obyek polyhedron
+	//glutSolidTetrahedron();
+	//glutSolidOctahedron();
+	//glutSolidDodecahedron();
+	//glutSolidIcosahedron();
+	//glutSolidCube(1.0f);
+	//glutSolidCone(1.0f, 1.0f, 50, 50);
+	//glutSolidSphere(1.0f, 50, 50);
+	//glutSolidTeapot(1.0f);
+	//glutSolidTorus(0.5f, 1.0f, 20, 20);
 }
-
 
 // taruh semua obyek yang akan digambar di fungsi display()
 void display()
@@ -280,7 +253,7 @@ void keyboard(int key, int x, int y)
 void timer(int value)
 {
 	glutPostRedisplay();
-	glutTimerFunc(55, timer, 1000);
+	glutTimerFunc(55, timer, 0);
 }
 
 // program utama
@@ -299,7 +272,7 @@ int main(int argc, char** argv)
 	glutInitWindowSize(480, 480);		// besarnya jendela dalam piksel dalam hal ini 300x300
 	glutInitWindowPosition(100, 100);	// posisi jendela dilayar komputer dalam piksel
 	// judul jendela (wajib diubah dengan informasi NAMA / NIM - JUDUL PRAKTIKUM masing-masing)
-	glutCreateWindow("Akbar Zaqi F / 2300018120 - KODE DASAR PRAKTIKUM GRAFIKA KOMPUTER");
+	glutCreateWindow("RIFAL FEBIYAN / 2100018345 - KODE DASAR PRAKTIKUM GRAFIKA KOMPUTER");
 	
 	// panggil fungsi init untuk inisialisasi awal
 	init();
@@ -315,3 +288,4 @@ int main(int argc, char** argv)
 
 	return 0;
 }
+
